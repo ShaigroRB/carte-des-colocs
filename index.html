@@ -1,11 +1,15 @@
-<div style="display: flex; flex-direction:row;">
+<div style="display: flex; flex-direction:row; ">
     <textarea id="data"></textarea>
     <button id="button">Sort by latest</button>
     <div>
-        <input type="range" id="hours" name="hours"
-               min="1" max="24">
+        <input type="range" id="hours" name="hours" min="1" max="24">
         <label for="hours"><span id="value_hours">12</span> hours</label>
-      </div>
+    </div>
+
+    <div style="margin-left: 1rem;">
+        <input type="number" id="price" name="price" min="300" max="2000" value="850">
+        <label for="price">Max <span id="value_price">850</span>€</label>
+    </div>
 </div>
 <div id="list" style="margin-top: 6rem; display: flex; flex-direction: column;"></div>
 
@@ -31,6 +35,8 @@
     const button = document.getElementById("button")
     const hours = document.getElementById("hours")
     const value_hours = document.getElementById("value_hours")
+    const price = document.getElementById("price")
+    const value_price = document.getElementById("value_price")
 
     const checkForLessThan2Hours = (date) => {
         const milliseconds = (new Date(date)).getTime()
@@ -43,7 +49,10 @@
         const defaultResults = [...data.results]
 
         const results = defaultResults.filter((appart) => {
-            return checkForLessThan2Hours(appart[ids.publication]) && !appart[ids.girls_only] && appart[ids.superficie_chambre] >= 10
+            return checkForLessThan2Hours(appart[ids.publication])
+                && !appart[ids.girls_only]
+                && appart[ids.superficie_chambre] >= 10
+                && appart[ids.prix] <= price.value
         })
 
         results.sort((a, b) => {
@@ -75,5 +84,8 @@
     })
     hours.addEventListener("change", (evt) => {
         value_hours.textContent = evt.target.value
+    })
+    price.addEventListener("change", (evt) => {
+        value_price.textContent = evt.target.value
     })
 </script>
