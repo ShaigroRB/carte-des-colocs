@@ -1,0 +1,79 @@
+<div style="display: flex; flex-direction:row;">
+    <textarea id="data"></textarea>
+    <button id="button">Sort by latest</button>
+    <div>
+        <input type="range" id="hours" name="hours"
+               min="1" max="24">
+        <label for="hours"><span id="value_hours">12</span> hours</label>
+      </div>
+</div>
+<div id="list" style="margin-top: 6rem; display: flex; flex-direction: column;"></div>
+
+<script>
+    const ids = {
+        "girls_only": "ahs",
+        "ville": "ac",
+        "adresse": "as",
+        "prix": "cr",
+        "publication": "ea",
+        "colocs": "hm",
+        "pieces": "ls",
+        "superficie_totale": "lo",
+        "superficie_chambre": "rs",
+        "meuble": "f",
+        "id": "ut",
+        "agence": "cn"
+    }
+
+    const url = 'https://www.lacartedescolocs.fr/logements/fr/ile-de-france/paris/a/'
+    const content = document.getElementById("list")
+    const data = document.getElementById("data")
+    const button = document.getElementById("button")
+    const hours = document.getElementById("hours")
+    const value_hours = document.getElementById("value_hours")
+
+    const checkForLessThan2Hours = (date) => {
+        const milliseconds = (new Date(date)).getTime()
+        const HOUR = 60 * 60 * 1000
+        const hoursAgo = Date.now() - (parseInt(hours.value) * HOUR);
+        return milliseconds > hoursAgo;
+    }
+
+    const recheckData = (data) => {
+        const defaultResults = [...data.results]
+
+        const results = defaultResults.filter((appart) => {
+            return checkForLessThan2Hours(appart[ids.publication]) && !appart[ids.girls_only] && appart[ids.superficie_chambre] >= 10
+        })
+
+        results.sort((a, b) => {
+            return new Date(b[ids.publication]) - new Date(a[ids.publication])
+        })
+
+        results.forEach((appart) => {
+            const isParis = ("" + appart[ids.ville]).toLowerCase().includes("paris")
+            const isLocService = appart[ids.agence] === "Locservice.Fr"
+            const link = document.createElement("a")
+            let linkStyle = `margin-left: 3px; border-left: 10px solid ${isLocService ? 'red' : 'green'}; `
+            if (!isParis) {
+                linkStyle += "align-self: end;"
+            }
+
+            link.style = linkStyle
+            link.href = url + appart[ids.id]
+            link.text = `${appart[ids.superficie_chambre]}m² ${appart[ids.meuble] ? "meublé" : "non meublé"} for ${appart[ids.prix]}€. ${appart[ids.colocs]} occupants. ${appart[ids.superficie_totale]}m² pour ${appart[ids.pieces]} -- ${appart[ids.adresse]}, ${appart[ids.ville]}`
+            content.appendChild(link)
+        })
+    }
+
+
+    button.addEventListener("click", () => {
+        const newData = JSON.parse(data.value)
+        content.textContent = ""
+        recheckData(newData)
+
+    })
+    hours.addEventListener("change", (evt) => {
+        value_hours.textContent = evt.target.value
+    })
+</script>
