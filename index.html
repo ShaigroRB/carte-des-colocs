@@ -76,7 +76,7 @@
             }
 
             link.style = linkStyle
-            link.href = url + appart[ids.id]
+            link.href = url + city.value + '/a/' + appart[ids.id]
             link.text = `${appart[ids.superficie_chambre]}m² ${appart[ids.meuble] ? "meublé" : "non meublé"} for ${appart[ids.prix]}€. ${appart[ids.colocs]} occupants. ${appart[ids.superficie_totale]}m² pour ${appart[ids.pieces]} -- ${appart[ids.adresse]}, ${appart[ids.ville]}`
             content.appendChild(link)
         })
