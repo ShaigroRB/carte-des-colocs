@@ -7,8 +7,13 @@
     </div>
 
     <div style="margin-left: 1rem;">
-        <input type="number" id="price" name="price" min="300" max="2000" value="850">
-        <label for="price">Max <span id="value_price">850</span>€</label>
+        <input type="number" id="price" name="price" min="300" max="2000" value="800">
+        <label for="price">Max <span id="value_price">800</span>€</label>
+    </div>
+    
+    <div style="margin-left:auto">
+        <input type="value" value="paris" id="city" name="city">
+        <button id="open_city">Search city</button>
     </div>
 </div>
 <div id="list" style="margin-top: 6rem; display: flex; flex-direction: column;"></div>
@@ -29,7 +34,7 @@
         "agence": "cn"
     }
 
-    const url = 'https://www.lacartedescolocs.fr/logements/fr/ile-de-france/paris/a/'
+    const url = 'https://www.lacartedescolocs.fr/logements/fr/ile-de-france/'
     const content = document.getElementById("list")
     const data = document.getElementById("data")
     const button = document.getElementById("button")
@@ -37,6 +42,8 @@
     const value_hours = document.getElementById("value_hours")
     const price = document.getElementById("price")
     const value_price = document.getElementById("value_price")
+    const open_city_button = document.getElementById("open_city")
+    const city = document.getElementById("city")
 
     const checkForLessThan2Hours = (date) => {
         const milliseconds = (new Date(date)).getTime()
@@ -81,6 +88,10 @@
         content.textContent = ""
         recheckData(newData)
 
+    })
+    open_city_button.addEventListener("click", () => {
+        const city_value = city.value
+        window.open(url + city_value, '_blank').focus()
     })
     hours.addEventListener("change", (evt) => {
         value_hours.textContent = evt.target.value
